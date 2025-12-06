@@ -1,6 +1,8 @@
 import axios from 'axios';
 import { useEffect, useRef, useState } from 'react';
 
+const API_BASE_URL = 'https://liabackend.onrender.com'; // Updated Base URL
+
 export const useChat = () => {
     const [messages, setMessages] = useState([]);
     const [conversationId, setConversationId] = useState(null);
@@ -16,7 +18,7 @@ export const useChat = () => {
 
     const fetchHistoryList = async () => {
         try {
-            const res = await axios.get('http://localhost:8000/conversations');
+            const res = await axios.get(`${API_BASE_URL}/conversations`);
             setHistoryList(res.data);
         } catch (err) {
             console.error("Failed to load history", err);
@@ -27,7 +29,7 @@ export const useChat = () => {
         try {
             setLoading(true);
             setInitialLoad(true);
-            const res = await axios.get(`http://localhost:8000/history/${id}`);
+            const res = await axios.get(`${API_BASE_URL}/history/${id}`);
             setConversationId(res.data.id);
             setMessages(res.data.messages);
             setAnalysis({
@@ -58,7 +60,7 @@ export const useChat = () => {
         setLoading(true);
 
         try {
-            const response = await axios.post('http://localhost:8000/chat', {
+            const response = await axios.post(`${API_BASE_URL}/chat`, {
                 message: userMsg.text,
                 conversation_id: conversationId
             });
@@ -99,7 +101,7 @@ export const useChat = () => {
         ));
 
         try {
-            await axios.post('http://localhost:8000/feedback', {
+            await axios.post(`${API_BASE_URL}/feedback`, {
                 message_id: msg.id,
                 corrected_label: newLabel
             });
